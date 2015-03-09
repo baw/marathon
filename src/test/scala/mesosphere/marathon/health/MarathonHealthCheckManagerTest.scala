@@ -116,6 +116,7 @@ class MarathonHealthCheckManagerTest extends MarathonSpec with Logging {
   test("healthCounts") {
     val appId = "test".toRootPath
     val version = Timestamp(1024)
+    appRepository.store(AppDefinition(id = appId, version = version))
 
     def makeRunningTask() = {
       val taskId = TaskIdUtil.newTaskId(appId)
@@ -144,7 +145,7 @@ class MarathonHealthCheckManagerTest extends MarathonSpec with Logging {
         .build
 
       EventFilter.info(start = "Received health result: [", occurrences = 1).intercept {
-        hcManager.update(taskStatus.toBuilder.setHealthy(healthy).build, version)
+        hcManager.update(taskStatus, version)
       }
     }
 
